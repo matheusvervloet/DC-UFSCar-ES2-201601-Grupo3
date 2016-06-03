@@ -51,6 +51,36 @@ public class ImportItemTest {
             }
         }
     }
-    
+
+    @Test
+    public void basicTestEmpty() throws IOException {
+        try (InputStream stream = ImportItemTest.class.getResourceAsStream("empty.bib")) {
+            List<BibEntry> entries = importer.importEntries(stream, new OutputPrinterToNull());
+
+            assertEquals(2, entries.size());
+
+            for (BibEntry entry : entries) {
+
+                if (entry.getType().equals("article")) {
+                    assertEquals(null, entry.getField("author"));
+                    assertEquals(null, entry.getField("title"));
+                    assertEquals(null, entry.getField("journal"));
+                    assertEquals(null, entry.getField("year"));
+                    assertEquals(null, entry.getField("volume"));
+                    assertEquals(null, entry.getField("note"));
+                    assertEquals(null, entry.getField("bibtexkey"));
+                } else if (entry.getType().equals("book")) {
+                    assertEquals(null, entry.getField("author"));
+                    assertEquals(null, entry.getField("title"));
+                    assertEquals(null, entry.getField("publisher"));
+                    assertEquals(null, entry.getField("year"));
+                    assertEquals(null, entry.getField("editor"));
+                    assertEquals(null, entry.getField("bibtexkey"));
+                }
+
+            }
+        }
+    }
+
 }
 
