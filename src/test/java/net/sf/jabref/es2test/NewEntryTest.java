@@ -15,26 +15,29 @@ import org.junit.Test;
 
 public class NewEntryTest {
 
-    private BibEntry newEntry;
+    private BibEntry newEntryA;
+    private BibEntry newEntryB;
 
     @Before
     public void setUp() {
         Globals.prefs = JabRefPreferences.getInstance();
-        newEntry = new BibEntry();
-        newEntry.setType(BibtexEntryTypes.ARTICLE);
+        newEntryA = new BibEntry();
+        newEntryA.setType(BibtexEntryTypes.ARTICLE);
+        newEntryB = new BibEntry();
+        newEntryB.setType(BibtexEntryTypes.BOOK);
     }
 
     @Test
     public void basicTest() {
-        newEntry.setField("year", "2003");
-        Assert.assertEquals("2003", newEntry.getFieldOrAlias("year"));
+        newEntryA.setField("year", "2003");
+        Assert.assertEquals("2003", newEntryA.getFieldOrAlias("year"));
     }
 
     @Test
     public void bibtexTestArticle() {
         String srcString = new String();
         try {
-            srcString = EntryEditor.getSourceString(newEntry, BibDatabaseMode.BIBTEX);
+            srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
         Assert.assertEquals("@Article{,\n}", srcString);
@@ -43,9 +46,9 @@ public class NewEntryTest {
     @Test
     public void bibtexTestArticleYear() {
         String srcString = new String();
-        newEntry.setField("year", "2003");
+        newEntryA.setField("year", "2003");
         try {
-            srcString = EntryEditor.getSourceString(newEntry, BibDatabaseMode.BIBTEX);
+            srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
         Assert.assertEquals("@Article{,\n  year = {2003},\n}", srcString);
@@ -54,9 +57,9 @@ public class NewEntryTest {
     @Test
     public void bibtexTestArticleYear2() {
         String srcString = new String();
-        newEntry.setField("year", "2003");
+        newEntryA.setField("year", "2003");
         try {
-            srcString = EntryEditor.getSourceString(newEntry, BibDatabaseMode.BIBTEX);
+            srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
         Assert.assertNotEquals("@Article{,\n  year = {2008},\n}", srcString);
@@ -65,9 +68,9 @@ public class NewEntryTest {
     @Test
     public void bibtexTestArticleYear3() {
         String srcString = new String();
-        newEntry.setField("year", "hello");
+        newEntryA.setField("year", "hello");
         try {
-            srcString = EntryEditor.getSourceString(newEntry, BibDatabaseMode.BIBTEX);
+            srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
         Assert.assertEquals("@Article{,\n  year = {hello},\n}", srcString);
@@ -76,9 +79,9 @@ public class NewEntryTest {
     @Test
     public void bibtexTestArticleYear4() {
         String srcString = new String();
-        newEntry.setField("year", "");
+        newEntryA.setField("year", "");
         try {
-            srcString = EntryEditor.getSourceString(newEntry, BibDatabaseMode.BIBTEX);
+            srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
         Assert.assertEquals("@Article{,\n}", srcString);
@@ -87,12 +90,12 @@ public class NewEntryTest {
     @Test
     public void bibtexTestArticleEmptyStrings() {
         String srcString = new String();
-        newEntry.setField("author", "");
-        newEntry.setField("title", "");
-        newEntry.setField("journal", "");
-        newEntry.setField("bibtexkey", "");
+        newEntryA.setField("author", "");
+        newEntryA.setField("title", "");
+        newEntryA.setField("journal", "");
+        newEntryA.setField("bibtexkey", "");
         try {
-            srcString = EntryEditor.getSourceString(newEntry, BibDatabaseMode.BIBTEX);
+            srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
         Assert.assertEquals("@Article{,\n}", srcString);
@@ -101,15 +104,101 @@ public class NewEntryTest {
     @Test
     public void bibtexTestArticleNonEmptyStrings() {
         String srcString = new String();
-        newEntry.setField("author", "ABC");
-        newEntry.setField("title", "DEF");
-        newEntry.setField("journal", "GHI");
-        newEntry.setField("bibtexkey", "JKL");
+        newEntryA.setField("author", "ABC");
+        newEntryA.setField("title", "DEF");
+        newEntryA.setField("journal", "GHI");
+        newEntryA.setField("bibtexkey", "JKL");
         try {
-            srcString = EntryEditor.getSourceString(newEntry, BibDatabaseMode.BIBTEX);
+            srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
         Assert.assertEquals("@Article{JKL,\n  author  = {ABC},\n  title   = {DEF},\n  journal = {GHI},\n}", srcString);
+    }
+
+    @Test
+    public void bibtexTestBook() {
+        String srcString = new String();
+        try {
+            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertEquals("@Book{,\n}", srcString);
+    }
+
+    @Test
+    public void bibtexTestBookYear() {
+        String srcString = new String();
+        newEntryB.setField("year", "2003");
+        try {
+            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertEquals("@Book{,\n  year = {2003},\n}", srcString);
+    }
+
+    @Test
+    public void bibtexTestBookYear2() {
+        String srcString = new String();
+        newEntryB.setField("year", "2003");
+        try {
+            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertNotEquals("@Book{,\n  year = {2008},\n}", srcString);
+    }
+
+    @Test
+    public void bibtexTestBookYear3() {
+        String srcString = new String();
+        newEntryB.setField("year", "hello");
+        try {
+            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertEquals("@Book{,\n  year = {hello},\n}", srcString);
+    }
+
+    @Test
+    public void bibtexTestBookYear4() {
+        String srcString = new String();
+        newEntryB.setField("year", "");
+        try {
+            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertEquals("@Book{,\n}", srcString);
+    }
+
+    @Test
+    public void bibtexTestBookEmptyStrings() {
+        String srcString = new String();
+        newEntryB.setField("author", "");
+        newEntryB.setField("title", "");
+        newEntryB.setField("publisher", "");
+        newEntryB.setField("editor", "");
+        newEntryB.setField("bibtexkey", "");
+        try {
+            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertEquals("@Book{,\n}", srcString);
+    }
+
+    @Test
+    public void bibtexTestBookNonEmptyStrings() {
+        String srcString = new String();
+        newEntryB.setField("title", "ABC");
+        newEntryB.setField("publisher", "DEF");
+        newEntryB.setField("author", "GHI");
+        newEntryB.setField("editor", "JKL");
+        newEntryB.setField("bibtexkey", "MNO");
+        try {
+            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertEquals(
+                "@Book{MNO,\n  title     = {ABC},\n  publisher = {DEF},\n  author    = {GHI},\n  editor    = {JKL},\n}",
+                srcString);
     }
 
 }
