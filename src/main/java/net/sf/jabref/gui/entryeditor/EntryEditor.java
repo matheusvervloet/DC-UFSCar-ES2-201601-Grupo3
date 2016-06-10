@@ -559,6 +559,7 @@ public class EntryEditor extends JPanel implements EntryContainer {
 
             try {
                 String srcString = getSourceString(entry, panel.getBibDatabaseContext().getMode());
+                System.out.println(srcString);
                 source.setText(srcString);
                 lastSourceStringAccepted = srcString;
 
@@ -592,7 +593,6 @@ public class EntryEditor extends JPanel implements EntryContainer {
         StringWriter stringWriter = new StringWriter(200);
         LatexFieldFormatter formatter = LatexFieldFormatter.buildIgnoreHashes();
         new BibEntryWriter(formatter, false).writeWithoutPrependedNewlines(entry, stringWriter, type);
-
         return stringWriter.getBuffer().toString();
     }
 
