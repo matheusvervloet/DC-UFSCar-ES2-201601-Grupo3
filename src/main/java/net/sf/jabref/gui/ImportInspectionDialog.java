@@ -89,6 +89,7 @@ import net.sf.jabref.gui.undo.UndoableRemoveEntry;
 import net.sf.jabref.gui.util.comparator.IconComparator;
 import net.sf.jabref.gui.util.component.CheckBoxMessage;
 import net.sf.jabref.importer.ImportInspector;
+import net.sf.jabref.importer.ImportMenuItem;
 import net.sf.jabref.importer.OutputPrinter;
 import net.sf.jabref.logic.groups.AllEntriesGroup;
 import net.sf.jabref.logic.groups.EntriesGroupChange;
@@ -633,7 +634,7 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                     if (entry.isGroupHit()) {
                         CheckBoxMessage cbm = new CheckBoxMessage(
                                 Localization
-                                        .lang("There are possible duplicates (marked with an icon) that haven't been resolved. Continue?"),
+                                        .lang("There are possible duplicates (marked with an icon) that haven't been resolved. Do you want to proceed (yes) or add them to a new database (no)?"),
                                 Localization.lang("Disable this confirmation dialog"), false);
                         int answer = JOptionPane.showConfirmDialog(ImportInspectionDialog.this, cbm,
                                 Localization.lang("Duplicates found"), JOptionPane.YES_NO_OPTION);
@@ -641,8 +642,14 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                             Globals.prefs.putBoolean(JabRefPreferences.WARN_ABOUT_DUPLICATES_IN_INSPECTION, false);
                         }
                         if (answer == JOptionPane.NO_OPTION) {
+                            //chamar novo database
+                            ImportMenuItem imi = new ImportMenuItem(frame, true, null);
+                            imi.automatedImport(Collections.singletonList(
+                                    "/home/matheus/eclipse/workspace/jabref/src/test/resources/net/sf/jabref/es2test/es2bib.bib"));
+                            dispose();
                             return;
                         }
+
                         break;
                     }
                 }
