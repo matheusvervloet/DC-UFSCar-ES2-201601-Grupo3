@@ -559,7 +559,6 @@ public class EntryEditor extends JPanel implements EntryContainer {
 
             try {
                 String srcString = getSourceString(entry, panel.getBibDatabaseContext().getMode());
-                System.out.println(srcString);
                 source.setText(srcString);
                 lastSourceStringAccepted = srcString;
 
