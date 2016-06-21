@@ -592,7 +592,6 @@ public class EntryEditor extends JPanel implements EntryContainer {
         StringWriter stringWriter = new StringWriter(200);
         LatexFieldFormatter formatter = LatexFieldFormatter.buildIgnoreHashes();
         new BibEntryWriter(formatter, false).writeWithoutPrependedNewlines(entry, stringWriter, type);
-
         return stringWriter.getBuffer().toString();
     }
 
