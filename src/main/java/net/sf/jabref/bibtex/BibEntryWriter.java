@@ -2,6 +2,7 @@ package net.sf.jabref.bibtex;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -139,6 +140,25 @@ public class BibEntryWriter {
         // the first condition mirrors mirror behavior of com.jgoodies.common.base.Strings.isNotBlank(str)
         if (!Strings.nullToEmpty(field).trim().isEmpty()) {
             out.write("  " + getFieldDisplayName(name, indentation));
+
+            if (name.equals("year")) {
+                int curr = Calendar.getInstance().get(Calendar.YEAR);
+                int y;
+
+                try {
+                    y = Integer.parseInt(field);
+                } catch (NumberFormatException ex) {
+                    throw new NumberFormatException("Error in field '" + name + "': " + ex.getMessage());
+                } catch (NullPointerException ex) {
+                    throw new NullPointerException("Error in field '" + name + "': " + ex.getMessage());
+                }
+
+                if ((y < 0) || (y > curr)) {
+                    field = Integer.toString(curr);
+                } else {
+                    field = Integer.toString(y);
+                }
+            }
 
             try {
                 out.write(fieldFormatter.format(field, name));

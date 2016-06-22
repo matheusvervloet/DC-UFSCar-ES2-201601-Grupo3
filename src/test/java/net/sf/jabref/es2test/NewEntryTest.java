@@ -116,6 +116,23 @@ public class NewEntryTest {
     }
 
     @Test
+    public void bibtexTestArticleDuplicateKeys() {
+        BibEntry newEntryA2 = new BibEntry();
+        newEntryA2.setType(BibtexEntryTypes.ARTICLE);
+        String srcString = new String();
+        String srcString2 = new String();
+        newEntryA.setField("bibtexkey", "key");
+        newEntryA2.setField("bibtexkey", "key");
+        try {
+            srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
+            srcString2 = EntryEditor.getSourceString(newEntryA2, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertEquals("@Article{key,\n}", srcString);
+        Assert.assertEquals("@Article{key,\n}", srcString2);
+    }
+
+    @Test
     public void bibtexTestBook() {
         String srcString = new String();
         try {
@@ -199,6 +216,23 @@ public class NewEntryTest {
         Assert.assertEquals(
                 "@Book{MNO,\n  title     = {ABC},\n  publisher = {DEF},\n  author    = {GHI},\n  editor    = {JKL},\n}",
                 srcString);
+    }
+
+    @Test
+    public void bibtexTestBookDuplicateKeys() {
+        BibEntry newEntryB2 = new BibEntry();
+        newEntryB2.setType(BibtexEntryTypes.BOOK);
+        String srcString = new String();
+        String srcString2 = new String();
+        newEntryB.setField("bibtexkey", "key");
+        newEntryB2.setField("bibtexkey", "key");
+        try {
+            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
+            srcString2 = EntryEditor.getSourceString(newEntryB2, BibDatabaseMode.BIBTEX);
+        } catch (IOException e) {
+        }
+        Assert.assertEquals("@Book{key,\n}", srcString);
+        Assert.assertEquals("@Book{key,\n}", srcString2);
     }
 
 }
