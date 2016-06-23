@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -95,6 +96,8 @@ public class BibEntry implements Cloneable {
     public BibEntry(String id, String type) {
         Objects.requireNonNull(id, "Every BibEntry must have an ID");
 
+        id = validateId(id);
+
         this.id = id;
         setType(type);
     }
@@ -108,9 +111,28 @@ public class BibEntry implements Cloneable {
     public void setId(String id) {
         Objects.requireNonNull(id, "Every BibEntry must have an ID");
 
+        id = validateId(id);
         eventBus.post(new FieldChangedEvent(this, BibEntry.ID_FIELD, id));
         this.id = id;
         changed = true;
+    }
+
+    /**
+     * Checks and corrects a given ID, that is, ensures it
+     * always starts with a letter.
+     * @param ID The BibTeX ID to be validated
+     * @return
+     */
+
+    private String validateId(String ID) {
+        Random r = new Random();
+        char c = (char) (r.nextInt(26) + 'a');
+        if (ID.length() == 0) {
+            ID = ID + c;
+        } else if (!Character.isLetter(ID.charAt(0))) {
+            ID = c + ID;
+        }
+        return ID;
     }
 
     /**
