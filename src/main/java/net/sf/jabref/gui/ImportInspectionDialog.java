@@ -25,8 +25,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -623,7 +625,7 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
 
                 //File newFile = new File("bin/tmp/tempNewDatabase");
                 PrintWriter newFile = null;
-                /*try {
+                try {
                     newFile = new PrintWriter("bin/tmp/tempNewDatabase", "UTF-8");
                     for (BibEntry entry : entries) {
                         newFile.println(entry);
@@ -631,7 +633,7 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                     }
                     newFile.close();
                 } catch (FileNotFoundException | UnsupportedEncodingException e) {
-                }*/
+                }
 
                 for (BibEntry entry : entries) {
 
@@ -659,6 +661,9 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                             //chamar novo database
                             ImportMenuItem imi = new ImportMenuItem(frame, true, null);
                             imi.automatedImport(Collections.singletonList("bin/tmp/tempNewDatabase"));
+                            BasePanel newPanel = (BasePanel) frame.getTabbedPane().getSelectedComponent();
+                            newPanel.getBibDatabaseContext().setDatabaseFile(null);
+                            newPanel.markBaseChanged();
 
                             dispose();
                             return;
