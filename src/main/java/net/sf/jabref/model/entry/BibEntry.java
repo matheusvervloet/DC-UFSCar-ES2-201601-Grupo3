@@ -625,10 +625,11 @@ public class BibEntry implements Cloneable {
     public static String validateId(String ID) {
         Random r = new Random();
         char c = (char) (r.nextInt(26) + 'a');
-        if (ID.length() == 0) {
-            ID = ID + c;
-        } else if (!Character.isLetter(ID.charAt(0))) {
+        if ((ID.length() == 0) || !Character.isLetter(ID.charAt(0))) {
             ID = c + ID;
+        }
+        if (ID.length() == 1) {
+            ID = ID + r.nextInt(10);
         }
         return ID;
     }
