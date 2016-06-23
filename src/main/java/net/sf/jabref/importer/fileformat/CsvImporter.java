@@ -39,7 +39,7 @@ import net.sf.jabref.model.entry.MonthUtil;
  */
 public class CsvImporter extends ImportFormat {
 
-    private static final Pattern RECOGNIZED_FORMAT_PATTERN = Pattern.compile("TY  - .*");
+    private static final Pattern RECOGNIZED_FORMAT_PATTERN = Pattern.compile("[^,\n]*\n?(,[^,\n]*\n?)*");
 
     /**
      * Return the name of this import format.
