@@ -118,24 +118,6 @@ public class BibEntry implements Cloneable {
     }
 
     /**
-     * Checks and corrects a given ID, that is, ensures it
-     * always starts with a letter.
-     * @param ID The BibTeX ID to be validated
-     * @return
-     */
-
-    private String validateId(String ID) {
-        Random r = new Random();
-        char c = (char) (r.nextInt(26) + 'a');
-        if (ID.length() == 0) {
-            ID = ID + c;
-        } else if (!Character.isLetter(ID.charAt(0))) {
-            ID = c + ID;
-        }
-        return ID;
-    }
-
-    /**
      * Returns this entry's ID.
      */
     public String getId() {
@@ -631,6 +613,24 @@ public class BibEntry implements Cloneable {
 
     public void unregisterListener(Object object) {
         this.eventBus.unregister(object);
+    }
+
+    /**
+     * Checks and corrects a given ID, that is, ensures it
+     * always starts with a letter.
+     * @param ID The BibTeX ID to be validated
+     * @return
+     */
+
+    public static String validateId(String ID) {
+        Random r = new Random();
+        char c = (char) (r.nextInt(26) + 'a');
+        if (ID.length() == 0) {
+            ID = ID + c;
+        } else if (!Character.isLetter(ID.charAt(0))) {
+            ID = c + ID;
+        }
+        return ID;
     }
 
 }

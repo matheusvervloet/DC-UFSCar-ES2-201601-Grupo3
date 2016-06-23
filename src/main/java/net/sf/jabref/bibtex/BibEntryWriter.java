@@ -123,6 +123,7 @@ public class BibEntryWriter {
 
     private void writeKeyField(BibEntry entry, Writer out) throws IOException {
         String keyField = StringUtil.shaveString(entry.getCiteKey());
+        keyField = BibEntry.validateId(keyField);
         out.write(keyField + ',' + Globals.NEWLINE);
     }
 
