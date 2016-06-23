@@ -56,7 +56,8 @@ public class OpenFileFilter extends javax.swing.filechooser.FileFilter implement
                 ".ref", // refer/endnote format
                 ".fcgi", // default for pubmed
                 ".bibx", // default for BibTeXML
-                ".xml"
+                ".xml",
+                ".csv"
         });
     }
 
