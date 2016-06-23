@@ -26,6 +26,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -619,6 +620,19 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
             // see if there
             // are unresolved duplicates, and warn if yes.
             if (Globals.prefs.getBoolean(JabRefPreferences.WARN_ABOUT_DUPLICATES_IN_INSPECTION)) {
+
+                //File newFile = new File("bin/tmp/tempNewDatabase");
+                PrintWriter newFile = null;
+                /*try {
+                    newFile = new PrintWriter("bin/tmp/tempNewDatabase", "UTF-8");
+                    for (BibEntry entry : entries) {
+                        newFile.println(entry);
+                        newFile.print("\n");
+                    }
+                    newFile.close();
+                } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                }*/
+
                 for (BibEntry entry : entries) {
 
                     // Only check entries that are to be imported. Keep status
@@ -644,12 +658,11 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                         if (answer == JOptionPane.NO_OPTION) {
                             //chamar novo database
                             ImportMenuItem imi = new ImportMenuItem(frame, true, null);
-                            imi.automatedImport(Collections.singletonList(
-                                    "/home/matheus/eclipse/workspace/jabref/src/test/resources/net/sf/jabref/es2test/es2bib.bib"));
+                            imi.automatedImport(Collections.singletonList("bin/tmp/tempNewDatabase"));
+
                             dispose();
                             return;
                         }
-
                         break;
                     }
                 }
