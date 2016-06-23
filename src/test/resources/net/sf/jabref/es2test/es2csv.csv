@@ -1,0 +1,10 @@
+%  a sample bibliography file
+%  
+
+@article,small,"Freely, I.P.","A small paper","The journal of small papers",1997,"-1","to appear",
+
+@article,big,"Jass, Hugh","A big paper","The journal of big papers",7991,"MCMXCVII",
+
+%  The authors mentioned here are almost, but not quite,
+%  entirely unrelated to Matt Groening.
+
