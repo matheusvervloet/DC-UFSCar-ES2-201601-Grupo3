@@ -1,0 +1,17 @@
+@article{small,
+  author = {Freely, I.P.},
+  journal = {The journal of small papers},
+  note = {to appear},
+  title = {A small paper},
+  volume = {-1},
+  year = {1997}
+}
+
+@article{big,
+  author = {Jass, Hugh},
+  journal = {The journal of big papers},
+  title = {A big paper},
+  volume = {MCMXCVII},
+  year = {7991}
+}
+

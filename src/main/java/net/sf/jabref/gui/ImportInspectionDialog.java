@@ -25,7 +25,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -89,6 +92,7 @@ import net.sf.jabref.gui.undo.UndoableRemoveEntry;
 import net.sf.jabref.gui.util.comparator.IconComparator;
 import net.sf.jabref.gui.util.component.CheckBoxMessage;
 import net.sf.jabref.importer.ImportInspector;
+import net.sf.jabref.importer.ImportMenuItem;
 import net.sf.jabref.importer.OutputPrinter;
 import net.sf.jabref.logic.groups.AllEntriesGroup;
 import net.sf.jabref.logic.groups.EntriesGroupChange;
@@ -618,6 +622,19 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
             // see if there
             // are unresolved duplicates, and warn if yes.
             if (Globals.prefs.getBoolean(JabRefPreferences.WARN_ABOUT_DUPLICATES_IN_INSPECTION)) {
+
+                //File newFile = new File("bin/tmp/tempNewDatabase");
+                PrintWriter newFile = null;
+                try {
+                    newFile = new PrintWriter("bin/tmp/tempNewDatabase", "UTF-8");
+                    for (BibEntry entry : entries) {
+                        newFile.println(entry);
+                        newFile.print("\n");
+                    }
+                    newFile.close();
+                } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                }
+
                 for (BibEntry entry : entries) {
 
                     // Only check entries that are to be imported. Keep status
@@ -633,7 +650,7 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                     if (entry.isGroupHit()) {
                         CheckBoxMessage cbm = new CheckBoxMessage(
                                 Localization
-                                        .lang("There are possible duplicates (marked with an icon) that haven't been resolved. Continue?"),
+                                        .lang("There are possible duplicates (marked with an icon) that haven't been resolved. Do you want to proceed (yes) or add them to a new database (no)?"),
                                 Localization.lang("Disable this confirmation dialog"), false);
                         int answer = JOptionPane.showConfirmDialog(ImportInspectionDialog.this, cbm,
                                 Localization.lang("Duplicates found"), JOptionPane.YES_NO_OPTION);
@@ -641,6 +658,14 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                             Globals.prefs.putBoolean(JabRefPreferences.WARN_ABOUT_DUPLICATES_IN_INSPECTION, false);
                         }
                         if (answer == JOptionPane.NO_OPTION) {
+                            //chamar novo database
+                            ImportMenuItem imi = new ImportMenuItem(frame, true, null);
+                            imi.automatedImport(Collections.singletonList("bin/tmp/tempNewDatabase"));
+                            BasePanel newPanel = (BasePanel) frame.getTabbedPane().getSelectedComponent();
+                            newPanel.getBibDatabaseContext().setDatabaseFile(null);
+                            newPanel.markBaseChanged();
+
+                            dispose();
                             return;
                         }
                         break;

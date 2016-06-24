@@ -107,6 +107,20 @@ public class ImportFormats {
                 if (file == null) {
                     return;
                 }
+                /*System.out.println(file);
+                if (!openInNew) {
+                    File newFile = new File("bin/tmp/tempNewDatabase");
+                    FileChannel source = null;
+                    FileChannel destination = null;
+                    try {
+                        source = new FileInputStream(file).getChannel();
+                        destination = new FileOutputStream(newFile).getChannel();
+                        destination.transferFrom(source, 0, source.size());
+                        source.close();
+                        destination.close();
+                    } catch (IOException exc) {
+                    }
+                }*/
 
                 FileFilter ff = fileChooser.getFileFilter();
                 ImportFormat format = null;
