@@ -97,7 +97,7 @@ public class NewEntryTest {
             writer.write(newEntryA, stringWriter, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
-        String expected = "\n@Article{,\n  year = {hello},\n}\n";
+        String expected = "\n@Article{,\n}\n";
         String actual = stringWriter.toString();
         Assert.assertEquals(expected, actual);
     }
@@ -238,7 +238,7 @@ public class NewEntryTest {
             writer.write(newEntryB, stringWriter, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
-        String expected = "\n@Book{,\n  year = {hello},\n}\n";
+        String expected = "\n@Book{,\n}\n";
         String actual = stringWriter.toString();
         Assert.assertEquals(expected, actual);
     }
@@ -268,7 +268,7 @@ public class NewEntryTest {
             writer.write(newEntryB, stringWriter, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
-        String expected = "\n@Book{,\n}";
+        String expected = "\n@Book{,\n}\n";
         String actual = stringWriter.toString();
         Assert.assertEquals(expected, actual);
     }
