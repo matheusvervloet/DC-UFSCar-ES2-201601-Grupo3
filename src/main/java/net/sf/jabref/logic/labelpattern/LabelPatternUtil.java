@@ -1421,6 +1421,9 @@ public class LabelPatternUtil {
         StringBuilder newKey = new StringBuilder();
         for (int i = 0; i < key.length(); i++) {
             char c = key.charAt(i);
+            if (((i == 0) && Character.isDigit(c))) {
+                break;
+            }
             if ((key.length() > 1) && !Character.isWhitespace(c) && ("{}(),\\\"#~^'".indexOf(c) == -1) && !((i == 0) && Character.isDigit(c))) {
                 newKey.append(c);
             }
