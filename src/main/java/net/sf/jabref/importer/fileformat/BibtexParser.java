@@ -207,8 +207,10 @@ public class BibtexParser {
 
     private void parseRemainingContent() {
         String commentStr = comment.toString();
-        if (commentStr.substring(0, 17).equals("% Encoding: UTF-8")) {
-            commentStr = commentStr.substring(18);
+        if (commentStr.length() >= 18) {
+            if (commentStr.substring(0, 17).equals("% Encoding: UTF-8")) {
+                commentStr = commentStr.substring(18);
+            }
         }
         database.setEpilog(commentStr);
         //database.setEpilog(dumpTextReadSoFarToString().trim());
@@ -927,7 +929,7 @@ public class BibtexParser {
         do {
             character = read();
             if (((char) character != expected) && (character != -1) && (character != 65535)) {
-                if ((char) character != '\n' || peek() != '\n') {
+                if (((char) character != '\n') || (peek() != '\n')) {
                     comment.append((char) character);
                 }
             }
