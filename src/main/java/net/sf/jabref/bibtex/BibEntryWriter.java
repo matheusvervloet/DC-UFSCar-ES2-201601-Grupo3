@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 
+import javax.swing.JOptionPane;
+
 import net.sf.jabref.Globals;
 import net.sf.jabref.exporter.LatexFieldFormatter;
 import net.sf.jabref.logic.TypedBibEntry;
@@ -139,27 +141,22 @@ public class BibEntryWriter {
         String field = entry.getField(name);
         // only write field if is is not empty or if empty fields should be included
         // the first condition mirrors mirror behavior of com.jgoodies.common.base.Strings.isNotBlank(str)
+        if (name.equals("year") && !Strings.nullToEmpty(field).trim().isEmpty()) {
+            int curr = Calendar.getInstance().get(Calendar.YEAR);
+            int y = -1;
+            try {
+                y = Integer.parseInt(field);
+            } catch (NumberFormatException | NullPointerException ex) {
+                JOptionPane.showMessageDialog(null, "Error in field '" + name + "': " + ex.getMessage());
+            }
+
+            if (y < 0) {
+                field = null;
+            }
+        }
+
         if (!Strings.nullToEmpty(field).trim().isEmpty()) {
             out.write("  " + getFieldDisplayName(name, indentation));
-
-            if (name.equals("year")) {
-                int curr = Calendar.getInstance().get(Calendar.YEAR);
-                int y;
-
-                try {
-                    y = Integer.parseInt(field);
-                } catch (NumberFormatException ex) {
-                    throw new NumberFormatException("Error in field '" + name + "': " + ex.getMessage());
-                } catch (NullPointerException ex) {
-                    throw new NullPointerException("Error in field '" + name + "': " + ex.getMessage());
-                }
-
-                if ((y < 0) || (y > curr)) {
-                    field = Integer.toString(curr);
-                } else {
-                    field = Integer.toString(y);
-                }
-            }
 
             try {
                 out.write(fieldFormatter.format(field, name));
