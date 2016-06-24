@@ -611,4 +611,11 @@ public class BibEntry implements Cloneable {
         this.eventBus.unregister(object);
     }
 
+    /**
+     * Checks and corrects a given ID, that is, ensures it
+     * always starts with a letter.
+     * @param ID The BibTeX ID to be validated
+     * @return
+     */
+
 }

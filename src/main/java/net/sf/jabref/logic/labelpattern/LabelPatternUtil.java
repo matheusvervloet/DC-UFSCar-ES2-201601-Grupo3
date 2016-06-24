@@ -1401,9 +1401,9 @@ public class LabelPatternUtil {
      * @param enforceLegalKey make sure that the key is legal in all respects
      */
     public static String checkLegalKey(String key, boolean enforceLegalKey) {
-        if (key == null) {
+        /*if (key == null) {
             return null;
-        }
+        }*/
         if (!enforceLegalKey) {
             // User doesn't want us to enforce legal characters. We must still look
             // for whitespace and some characters such as commas, since these would
@@ -1421,7 +1421,10 @@ public class LabelPatternUtil {
         StringBuilder newKey = new StringBuilder();
         for (int i = 0; i < key.length(); i++) {
             char c = key.charAt(i);
-            if (!Character.isWhitespace(c) && ("{}(),\\\"#~^'".indexOf(c) == -1)) {
+            if (((i == 0) && Character.isDigit(c))) {
+                break;
+            }
+            if ((key.length() > 1) && !Character.isWhitespace(c) && ("{}(),\\\"#~^'".indexOf(c) == -1) && !((i == 0) && Character.isDigit(c))) {
                 newKey.append(c);
             }
         }

@@ -2,6 +2,7 @@ package net.sf.jabref.bibtex;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +10,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 
+import javax.swing.JOptionPane;
+
 import net.sf.jabref.Globals;
 import net.sf.jabref.exporter.LatexFieldFormatter;
 import net.sf.jabref.logic.TypedBibEntry;
+import net.sf.jabref.logic.labelpattern.LabelPatternUtil;
 import net.sf.jabref.logic.util.strings.StringUtil;
 import net.sf.jabref.model.EntryTypes;
 import net.sf.jabref.model.database.BibDatabaseMode;
@@ -122,6 +126,12 @@ public class BibEntryWriter {
 
     private void writeKeyField(BibEntry entry, Writer out) throws IOException {
         String keyField = StringUtil.shaveString(entry.getCiteKey());
+
+        if ((keyField.length() == 0) || (keyField.length() == 1) || !Character.isLetter(keyField.charAt(0))) {
+            keyField = LabelPatternUtil.checkLegalKey(keyField, true);
+        }
+
+        entry.setCiteKey(keyField);
         out.write(keyField + ',' + Globals.NEWLINE);
     }
 
@@ -137,6 +147,22 @@ public class BibEntryWriter {
         String field = entry.getField(name);
         // only write field if is is not empty or if empty fields should be included
         // the first condition mirrors mirror behavior of com.jgoodies.common.base.Strings.isNotBlank(str)
+        if (name.equals("year") && !Strings.nullToEmpty(field).trim().isEmpty()) {
+            int curr = Calendar.getInstance().get(Calendar.YEAR);
+            int y = -1;
+            try {
+                y = Integer.parseInt(field);
+            } catch (NumberFormatException | NullPointerException ex) {
+                JOptionPane.showMessageDialog(null, "Error in field '" + name + "': " + ex.getMessage());
+            }
+
+            if (y < 0) {
+                field = null;
+            } else {
+                entry.setChanged(true);
+            }
+        }
+
         if (!Strings.nullToEmpty(field).trim().isEmpty()) {
             out.write("  " + getFieldDisplayName(name, indentation));
 
