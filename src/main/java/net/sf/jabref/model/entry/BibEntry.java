@@ -29,7 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -96,8 +95,6 @@ public class BibEntry implements Cloneable {
     public BibEntry(String id, String type) {
         Objects.requireNonNull(id, "Every BibEntry must have an ID");
 
-        id = validateId(id);
-
         this.id = id;
         setType(type);
     }
@@ -111,7 +108,6 @@ public class BibEntry implements Cloneable {
     public void setId(String id) {
         Objects.requireNonNull(id, "Every BibEntry must have an ID");
 
-        id = validateId(id);
         eventBus.post(new FieldChangedEvent(this, BibEntry.ID_FIELD, id));
         this.id = id;
         changed = true;
@@ -621,17 +617,5 @@ public class BibEntry implements Cloneable {
      * @param ID The BibTeX ID to be validated
      * @return
      */
-
-    public static String validateId(String ID) {
-        Random r = new Random();
-        char c = (char) (r.nextInt(26) + 'a');
-        if ((ID.length() == 0) || !Character.isLetter(ID.charAt(0))) {
-            ID = c + ID;
-        }
-        if (ID.length() == 1) {
-            ID = ID + r.nextInt(10);
-        }
-        return ID;
-    }
 
 }

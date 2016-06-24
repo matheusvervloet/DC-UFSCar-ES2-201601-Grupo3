@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import net.sf.jabref.Globals;
 import net.sf.jabref.exporter.LatexFieldFormatter;
 import net.sf.jabref.logic.TypedBibEntry;
+import net.sf.jabref.logic.labelpattern.LabelPatternUtil;
 import net.sf.jabref.logic.util.strings.StringUtil;
 import net.sf.jabref.model.EntryTypes;
 import net.sf.jabref.model.database.BibDatabaseMode;
@@ -125,7 +126,12 @@ public class BibEntryWriter {
 
     private void writeKeyField(BibEntry entry, Writer out) throws IOException {
         String keyField = StringUtil.shaveString(entry.getCiteKey());
-        keyField = BibEntry.validateId(keyField);
+
+        if ((keyField.length() == 0) || (keyField.length() == 1) || !Character.isLetter(keyField.charAt(0))) {
+            keyField = LabelPatternUtil.checkLegalKey(keyField, true);
+        }
+
+        entry.setCiteKey(keyField);
         out.write(keyField + ',' + Globals.NEWLINE);
     }
 
@@ -152,6 +158,8 @@ public class BibEntryWriter {
 
             if (y < 0) {
                 field = null;
+            } else {
+                entry.setChanged(true);
             }
         }
 
