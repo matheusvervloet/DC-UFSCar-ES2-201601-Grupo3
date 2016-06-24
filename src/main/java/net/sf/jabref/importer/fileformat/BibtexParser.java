@@ -72,7 +72,7 @@ public class BibtexParser {
     private ParserResult parserResult;
     private static final Integer LOOKAHEAD = 64;
     private final Deque<Character> pureTextFromFile = new LinkedList<>();
-
+    private final StringBuilder comment = new StringBuilder(20);
 
     public BibtexParser(Reader in) {
         Objects.requireNonNull(in);
@@ -206,7 +206,12 @@ public class BibtexParser {
     }
 
     private void parseRemainingContent() {
-        database.setEpilog(dumpTextReadSoFarToString().trim());
+        String commentStr = comment.toString();
+        if (commentStr.substring(0, 17).equals("% Encoding: UTF-8")) {
+            commentStr = commentStr.substring(18);
+        }
+        database.setEpilog(commentStr);
+        //database.setEpilog(dumpTextReadSoFarToString().trim());
     }
 
     private void parseAndAddEntry(String type) {
@@ -917,11 +922,16 @@ public class BibtexParser {
     }
 
     private boolean consumeUncritically(char expected) throws IOException {
+
         int character;
         do {
             character = read();
+            if (((char) character != expected) && (character != -1) && (character != 65535)) {
+                if ((char) character != '\n' || peek() != '\n') {
+                    comment.append((char) character);
+                }
+            }
         } while ((character != expected) && (character != -1) && (character != 65535));
-
         if (isEOFCharacter(character)) {
             eof = true;
         }
