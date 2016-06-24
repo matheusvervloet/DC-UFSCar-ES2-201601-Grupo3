@@ -55,7 +55,6 @@ public class CsvImporterTest {
             List<BibEntry> entries = csvImporter.importEntries(stream, null);
 
             for (BibEntry entry : entries) {
-                System.out.println(entry);
                 if (entry.getCiteKey().equals("small")) {
                     assertEquals("Freely, I. P.", entry.getField("author"));
                     assertEquals("A small paper", entry.getField("title"));
