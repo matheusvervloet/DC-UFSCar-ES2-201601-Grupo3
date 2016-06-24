@@ -18,6 +18,7 @@ public class ImportItemTest {
 
     private BibtexImporter importer;
 
+
     @Before
     public void setUp() {
         Globals.prefs = JabRefPreferences.getInstance();
