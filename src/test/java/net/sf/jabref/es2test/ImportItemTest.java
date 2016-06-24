@@ -68,14 +68,14 @@ public class ImportItemTest {
                     assertEquals(null, entry.getField("year"));
                     assertEquals(null, entry.getField("volume"));
                     assertEquals(null, entry.getField("note"));
-                    assertEquals(null, entry.getField("bibtexkey"));
+                    assertEquals(null, entry.getCiteKey());
                 } else if (entry.getType().equals("book")) {
                     assertEquals(null, entry.getField("author"));
                     assertEquals(null, entry.getField("title"));
                     assertEquals(null, entry.getField("publisher"));
                     assertEquals(null, entry.getField("year"));
                     assertEquals(null, entry.getField("editor"));
-                    assertEquals(null, entry.getField("bibtexkey"));
+                    assertEquals(null, entry.getCiteKey());
                 }
 
             }

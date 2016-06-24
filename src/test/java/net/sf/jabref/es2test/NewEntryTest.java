@@ -1,6 +1,8 @@
 package net.sf.jabref.es2test;
 
+import net.sf.jabref.model.database.BibDatabase;
 import net.sf.jabref.model.database.BibDatabaseMode;
+import net.sf.jabref.model.database.KeyCollisionException;
 import net.sf.jabref.model.entry.BibEntry;
 import net.sf.jabref.model.entry.BibtexEntryTypes;
 
@@ -12,6 +14,8 @@ import net.sf.jabref.gui.entryeditor.EntryEditor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class NewEntryTest {
 
@@ -116,20 +120,46 @@ public class NewEntryTest {
     }
 
     @Test
-    public void bibtexTestArticleDuplicateKeys() {
-        BibEntry newEntryA2 = new BibEntry();
-        newEntryA2.setType(BibtexEntryTypes.ARTICLE);
+    public void bibtexTestArticleKey() {
         String srcString = new String();
-        String srcString2 = new String();
-        newEntryA.setField("bibtexkey", "key");
-        newEntryA2.setField("bibtexkey", "key");
+        newEntryA.setCiteKey("key");
         try {
             srcString = EntryEditor.getSourceString(newEntryA, BibDatabaseMode.BIBTEX);
-            srcString2 = EntryEditor.getSourceString(newEntryA2, BibDatabaseMode.BIBTEX);
         } catch (IOException e) {
         }
         Assert.assertEquals("@Article{key,\n}", srcString);
-        Assert.assertEquals("@Article{key,\n}", srcString2);
+    }
+
+    @Test
+    public void bibtexTestArticleDuplicateKeys() {
+        BibDatabase database = new BibDatabase();
+        BibEntry newEntryA2 = new BibEntry();
+        newEntryA2.setType(BibtexEntryTypes.ARTICLE);
+        newEntryA.setCiteKey("key");
+        newEntryA2.setCiteKey("key");
+        database.insertEntry(newEntryA);
+        try {
+            database.insertEntry(newEntryA2);
+        } catch (KeyCollisionException ex) {
+            fail("should not get here...");
+        }
+        assertEquals(database.getEntryCount(), 2);
+    }
+
+    @Test
+    public void bibtexTestArticleNonDuplicateKeys() {
+        BibDatabase database = new BibDatabase();
+        BibEntry newEntryA2 = new BibEntry();
+        newEntryA2.setType(BibtexEntryTypes.ARTICLE);
+        newEntryA.setCiteKey("key");
+        newEntryA2.setCiteKey("key2");
+        database.insertEntry(newEntryA);
+        try {
+            database.insertEntry(newEntryA2);
+        } catch (KeyCollisionException ex) {
+            fail("should not get here...");
+        }
+        assertEquals(database.getEntryCount(), 2);
     }
 
     @Test
@@ -220,19 +250,33 @@ public class NewEntryTest {
 
     @Test
     public void bibtexTestBookDuplicateKeys() {
+        BibDatabase database = new BibDatabase();
         BibEntry newEntryB2 = new BibEntry();
         newEntryB2.setType(BibtexEntryTypes.BOOK);
-        String srcString = new String();
-        String srcString2 = new String();
-        newEntryB.setField("bibtexkey", "key");
-        newEntryB2.setField("bibtexkey", "key");
+        newEntryB.setCiteKey("key");
+        newEntryB2.setCiteKey("key");
+        database.insertEntry(newEntryB);
         try {
-            srcString = EntryEditor.getSourceString(newEntryB, BibDatabaseMode.BIBTEX);
-            srcString2 = EntryEditor.getSourceString(newEntryB2, BibDatabaseMode.BIBTEX);
-        } catch (IOException e) {
+            database.insertEntry(newEntryB2);
+        } catch (KeyCollisionException ex) {
+            fail("should not get here...");
         }
-        Assert.assertEquals("@Book{key,\n}", srcString);
-        Assert.assertEquals("@Book{key,\n}", srcString2);
+        assertEquals(database.getEntryCount(), 2);
     }
 
+    @Test
+    public void bibtexTestBookNonDuplicateKeys() {
+        BibDatabase database = new BibDatabase();
+        BibEntry newEntryB2 = new BibEntry();
+        newEntryB2.setType(BibtexEntryTypes.BOOK);
+        newEntryB.setCiteKey("key");
+        newEntryB2.setCiteKey("key2");
+        database.insertEntry(newEntryB);
+        try {
+            database.insertEntry(newEntryB2);
+        } catch (KeyCollisionException ex) {
+            fail("should not get here...");
+        }
+        assertEquals(database.getEntryCount(), 2);
+    }
 }
