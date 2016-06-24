@@ -63,17 +63,25 @@ public class CsvImporter extends ImportFormat {
     @Override
     public boolean isRecognizedFormat(InputStream stream) throws IOException {
 
-        // Our strategy is to look for the "AU  - *" line.
         try (BufferedReader in = new BufferedReader(ImportFormatReader.getReaderDefaultEncoding(stream))) {
 
             String str;
+
             while ((str = in.readLine()) != null) {
-                if (RECOGNIZED_FORMAT_PATTERN.matcher(str).find()) {
-                    return true;
+
+                String[] fields = str.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                int count = fields.length;
+
+                if ((count % 2) == 0) {
+                    return false;
+                }
+
+                if (!RECOGNIZED_FORMAT_PATTERN.matcher(str).find()) {
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -210,6 +218,7 @@ public class CsvImporter extends ImportFormat {
                     hm.put("comment", comment);
                 }
             }
+
             BibEntry b = new BibEntry(DEFAULT_BIBTEXENTRY_ID, type); // id assumes an existing database so don't
 
             // Remove empty fields:
@@ -227,6 +236,7 @@ public class CsvImporter extends ImportFormat {
 
             // create one here
             b.setField(hm);
+            b.setCiteKey(bibtexkey);
             bibitems.add(b);
 
         }
